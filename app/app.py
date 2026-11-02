@@ -207,7 +207,7 @@ def halaman_sekilas():
 # ------------------------------------------------------------------------------------------ Jelajah per aplikasi
 def halaman_jelajah():
     kubus, harian = muat('kubus'), muat('harian')
-    st.title('Jelajah per aplikasi')
+    st.title('Per aplikasi')
 
     a, b, c = st.columns([1.2, 2, 1.6])
     nama = a.radio('Aplikasi', URUTAN_APLIKASI, format_func=NAMA.get, horizontal=True)
@@ -259,11 +259,11 @@ def halaman_jelajah():
                                                   '<extra></extra>',
         ))
         puncak = h[h['lonjakan']]
-        fig.add_trace(go.Scatter(x=puncak['hari'], y=puncak['jumlah'], mode='markers', name='Hari insiden',
+        fig.add_trace(go.Scatter(x=puncak['hari'], y=puncak['jumlah'], mode='markers', name='Hari gangguan',
                                  marker=dict(size=10, color=MERAH_INSIDEN), hoverinfo='skip'))
         fig.update_layout(yaxis_title='Ulasan per hari')
         tampilkan(rapikan(fig, tinggi=340))
-        st.caption('Titik merah = hari insiden (volume > 3x hari biasa).')
+        st.caption('Titik merah = hari gangguan (volume > 3x hari biasa).')
 
     st.subheader('Apa yang dibicarakan')
     n = r['n']
@@ -324,7 +324,7 @@ def halaman_jelajah():
 
 # ----------------------------------------------------------------------------------------------- Versi & insiden
 def halaman_versi():
-    st.title('Versi aplikasi dan hari insiden')
+    st.title('Update & gangguan')
     nama = st.radio('Aplikasi', URUTAN_APLIKASI, format_func=NAMA.get, horizontal=True)
 
     v = muat('versi')
@@ -351,17 +351,17 @@ def halaman_versi():
         ))
     for hari in insiden['hari']:
         fig.add_vline(x=pd.Timestamp(hari).strftime('%Y-%m-%d'), line_width=1, line_color=MERAH_INSIDEN)
-    fig.add_trace(go.Scatter(x=[None], y=[None], mode='lines', name='Hari insiden',
+    fig.add_trace(go.Scatter(x=[None], y=[None], mode='lines', name='Hari gangguan',
                              line=dict(color=MERAH_INSIDEN, width=1)))
     fig.update_layout(yaxis=dict(title='% ulasan berisi keluhan', rangemode='tozero'), xaxis_title='Versi mulai dipakai')
     tampilkan(rapikan(fig, tinggi=440))
     st.caption('Tiap titik = satu versi (makin besar = makin banyak ulasan). Belah ketupat = versi yang keluhannya '
-               'melonjak; garis merah = hari insiden.')
+               'melonjak; garis merah = hari gangguan.')
 
     if insiden.empty:
         return
-    st.subheader('Apa yang dikeluhkan di hari insiden')
-    hari_pilih = st.selectbox('Hari insiden', list(insiden['hari']), format_func=lambda h: h.strftime('%d %b %Y'))
+    st.subheader('Apa yang dikeluhkan di hari gangguan')
+    hari_pilih = st.selectbox('Hari gangguan', list(insiden['hari']), format_func=lambda h: h.strftime('%d %b %Y'))
     baris = insiden[insiden['hari'] == hari_pilih].iloc[0]
     kubus = muat('kubus')
     normal = kubus[(kubus['aplikasi'] == nama) & ~kubus['hari_lonjakan']]
@@ -459,7 +459,7 @@ def halaman_coba():
 # ----------------------------------------------------------------------------------------------------- Tentang
 def halaman_tentang():
     info = muat_info()
-    st.title('Tentang data dan model')
+    st.title('Data & metode')
     st.markdown(
         f"- **Data**: {angka(info['jumlah_ulasan'])} ulasan Google Play ({label_periode(info)}) setelah cleaning. "
         'Nama dan foto pengguna tidak pernah diambil.\n'
@@ -514,11 +514,11 @@ def halaman_tentang():
 
 # -------------------------------------------------------------------------------------------------- Navigasi
 HALAMAN = {
-    'Sekilas 3 aplikasi': halaman_sekilas,
-    'Jelajah per aplikasi': halaman_jelajah,
-    'Versi & insiden': halaman_versi,
+    'Ringkasan': halaman_sekilas,
+    'Per aplikasi': halaman_jelajah,
+    'Update & gangguan': halaman_versi,
     'Coba model': halaman_coba,
-    'Tentang': halaman_tentang,
+    'Data & metode': halaman_tentang,
 }
 
 hilang = [str(p.relative_to(FOLDER_APP)) for p in FILE_WAJIB if not p.exists()]
@@ -527,5 +527,5 @@ if hilang:
              'folder `app/` dari Google Drive ke repo:\n\n' + '\n'.join(f'- `{h}`' for h in hilang))
     st.stop()
 
-pilihan = st.sidebar.radio('Halaman', list(HALAMAN))
+pilihan = st.sidebar.radio('Menu', list(HALAMAN))
 HALAMAN[pilihan]()
