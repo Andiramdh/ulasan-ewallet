@@ -1,0 +1,8 @@
+# Dibuat otomatis oleh 05_insight.ipynb (7.11). scikit-learn harus sama dengan saat model TF-IDF dilatih.
+streamlit==1.40.2
+plotly==5.24.1
+pandas>=2.0,<3
+pyarrow>=14
+numpy>=2.0,<3
+scikit-learn==1.6.1
+joblib>=1.3

@@ -1,0 +1,8 @@
+# Data berisi teks ulasan penuh (hanya di Google Drive)
+/data/
+
+# Lingkungan lokal
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

@@ -1,0 +1,7 @@
+{
+  "sentimen": "Dua tahap (rating -> gold)",
+  "aspek": "IndoBERT multi-label",
+  "versi_label": "6b6ec0d2",
+  "jumlah_ulasan": 398742,
+  "periode": "2025-10 s.d. 2026-09"
+}
